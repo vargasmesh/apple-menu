@@ -5,9 +5,12 @@ import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { useState } from "react";
 
 const GlobalNavContent = ({ show }: { show: boolean }) => {
-  const visibility = show ? "visible" : "invisible";
   return (
-    <li className={`absolute bg-[#161617] h-full z-10 w-full ${visibility}`}>
+    <li
+      className={`absolute bg-[#161617] z-10 w-full transition-all duration-[600ms] ${
+        show ? "h-full" : "h-0"
+      }`}
+    >
       <div className="pt-12">
         <div className="text-2xl px-12 py-1 font-semibold">Store</div>
         <div className="text-2xl px-12 py-1 font-semibold">Mac</div>
@@ -27,11 +30,22 @@ const GlobalNavContent = ({ show }: { show: boolean }) => {
 
 function App() {
   const [show, setShow] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const handleButtonClick = () => {
+    if (!isButtonDisabled) {
+      setShow(!show);
+      setIsButtonDisabled(true);
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 600);
+    }
+  };
 
   return (
     <>
       <div>
-        <nav className="bg-[#161617cc] text-[#ffffffcc] h-12 ">
+        <nav className="bg-[#161617cc] text-[#ffffffcc] h-12">
           <div className="flex h-full">
             <ul className="flex flex-1">
               <li className="flex-1">
@@ -51,11 +65,11 @@ function App() {
                 </a>
               </li>
             </ul>
-            <div>
+            <div className="z-10">
               <button
                 className="block w-max px-4 h-12"
                 aria-label="Menu"
-                onClick={() => setShow(true)}
+                onClick={handleButtonClick}
               >
                 <HiOutlineMenuAlt4 className="h-full" />
               </button>
