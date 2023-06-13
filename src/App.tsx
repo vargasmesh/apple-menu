@@ -30,11 +30,11 @@ const MenuItem = ({
 const GlobalNavContent = ({ show }: { show: boolean }) => {
   return (
     <li
-      className={`absolute bg-[#161617] z-10 w-full transition-all duration-[600ms] ${
-        show ? "h-full" : "h-0"
+      className={`absolute bg-[#161617] z-10 w-full  transition-all duration-[600ms] ${
+        show ? "h-screen" : "h-0"
       }`}
     >
-      <div className="pt-12">
+      <div className="pt-12 relative">
         <MenuItem show={show} index={0}>
           Store
         </MenuItem>
@@ -90,7 +90,7 @@ function App() {
   return (
     <>
       <div>
-        <nav className="bg-[#161617cc] text-[#ffffffcc] h-12">
+        <nav className="bg-[#161617cc] text-[#ffffffcc] h-12 fixed w-full top-0 left-0 right-0">
           <div className="flex h-full">
             <ul className="flex flex-1">
               <li className="flex-1">
