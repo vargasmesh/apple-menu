@@ -31,7 +31,7 @@ const GlobalNavContent = ({ show }: { show: boolean }) => {
   return (
     <li
       className={`absolute bg-[#161617] z-10 w-full  transition-all duration-[600ms] ${
-        show ? "h-screen" : "h-0"
+        show ? "h-screen visible" : "h-0 invisible"
       }`}
     >
       <div className="pt-12 relative">
