@@ -2,7 +2,7 @@ import { FaApple } from "react-icons/fa";
 import { IoBagOutline } from "react-icons/io5";
 import { BsSearch } from "react-icons/bs";
 import { HiOutlineMenuAlt4 } from "react-icons/hi";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const MenuItem = ({
   children,
@@ -13,7 +13,13 @@ const MenuItem = ({
   show: boolean;
   index: number;
 }) => {
-  const [showSubMenu] = useState(false);
+  const [showSubMenu, setShowSubMenu] = useState(false);
+
+  useEffect(() => {
+    if (!show) {
+      setShowSubMenu(false);
+    }
+  }, [show]);
 
   return (
     <div
@@ -23,37 +29,80 @@ const MenuItem = ({
       style={{
         transitionDelay: show ? `${index * 50}ms` : "0ms",
       }}
+      role="button"
+      onClick={() => !showSubMenu && setShowSubMenu(!showSubMenu)}
     >
-      {typeof children === "function" ? children(showSubMenu) : children}
+      {typeof children === "function"
+        ? children(show && showSubMenu)
+        : children}
+    </div>
+  );
+};
+
+const SubMenuItem = ({
+  active,
+  subMenu,
+}: {
+  active: boolean;
+  subMenu: string[];
+}) => {
+  return (
+    <div
+      className={`pt-12 absolute z-20 bg-[#161617] w-full h-full top-0 left-0 right-0 ${
+        active ? "visible" : "invisible"
+      }`}
+    >
+      <ul>
+        {subMenu.map((item, index) => (
+          <li key={index} className="text-2xl font-semibold px-12 py-1">
+            <a href="#">{item}</a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
 const GlobalNavContent = ({ show }: { show: boolean }) => {
   const items = [
-    { label: "Store" },
-    { label: "Mac" },
-    { label: "iPad" },
-    { label: "iPhone" },
-    { label: "Watch" },
-    { label: "Vision" },
-    { label: "AirPods" },
-    { label: "TV & Home" },
-    { label: "Entertaiment" },
-    { label: "Accessories" },
-    { label: "Support" },
+    {
+      label: "Store",
+      subMenu: [
+        "Shop the Latest",
+        "Mac",
+        "iPad",
+        "iPhone",
+        "Apple Watch",
+        "Accessories",
+      ],
+    },
+    { label: "Mac", subMenu: [] },
+    { label: "iPad", subMenu: [] },
+    { label: "iPhone", subMenu: [] },
+    { label: "Watch", subMenu: [] },
+    { label: "Vision", subMenu: [] },
+    { label: "AirPods", subMenu: [] },
+    { label: "TV & Home", subMenu: [] },
+    { label: "Entertaiment", subMenu: [] },
+    { label: "Accessories", subMenu: [] },
+    { label: "Support", subMenu: [] },
   ];
 
   return (
     <li
-      className={`absolute bg-[#161617] z-10 w-full  transition-all duration-[600ms] ${
+      className={`absolute bg-[#161617] z-10 w-full transition-all duration-[600ms] ${
         show ? "h-screen visible" : "h-0 invisible"
       }`}
     >
       <div className="pt-12 relative">
         {items.map((item, index) => (
           <MenuItem show={show} index={index} key={index}>
-            {item.label}
+            {(active) => (
+              <div>
+                <span>{item.label}</span>
+                <SubMenuItem active={active} subMenu={item.subMenu} />
+              </div>
+            )}
           </MenuItem>
         ))}
       </div>
