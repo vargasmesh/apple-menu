@@ -2,17 +2,19 @@ import { FaApple } from "react-icons/fa";
 import { IoBagOutline } from "react-icons/io5";
 import { BsSearch } from "react-icons/bs";
 import { HiOutlineMenuAlt4 } from "react-icons/hi";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const MenuItem = ({
   children,
   show,
   index,
 }: {
-  children: React.ReactNode;
+  children: ((showSubMenu: boolean) => React.ReactNode) | React.ReactNode;
   show: boolean;
   index: number;
 }) => {
+  const [showSubMenu] = useState(false);
+
   return (
     <div
       className={`text-2xl px-12 py-1 font-semibold duration-1000 ${
@@ -22,7 +24,7 @@ const MenuItem = ({
         transitionDelay: show ? `${index * 50}ms` : "0ms",
       }}
     >
-      {children}
+      {typeof children === "function" ? children(showSubMenu) : children}
     </div>
   );
 };
