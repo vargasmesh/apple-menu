@@ -4,6 +4,29 @@ import { BsSearch } from "react-icons/bs";
 import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { useState } from "react";
 
+const MenuItem = ({
+  children,
+  show,
+  index,
+}: {
+  children: React.ReactNode;
+  show: boolean;
+  index: number;
+}) => {
+  return (
+    <div
+      className={`text-2xl px-12 py-1 font-semibold duration-1000 ${
+        show ? "opacity-100" : "opacity-0"
+      }`}
+      style={{
+        transitionDelay: show ? `${index * 50}ms` : "0ms",
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 const GlobalNavContent = ({ show }: { show: boolean }) => {
   return (
     <li
@@ -12,17 +35,39 @@ const GlobalNavContent = ({ show }: { show: boolean }) => {
       }`}
     >
       <div className="pt-12">
-        <div className="text-2xl px-12 py-1 font-semibold">Store</div>
-        <div className="text-2xl px-12 py-1 font-semibold">Mac</div>
-        <div className="text-2xl px-12 py-1 font-semibold">iPad</div>
-        <div className="text-2xl px-12 py-1 font-semibold">iPhone</div>
-        <div className="text-2xl px-12 py-1 font-semibold">Watch</div>
-        <div className="text-2xl px-12 py-1 font-semibold">Vision</div>
-        <div className="text-2xl px-12 py-1 font-semibold">AirPods</div>
-        <div className="text-2xl px-12 py-1 font-semibold">TV & Home</div>
-        <div className="text-2xl px-12 py-1 font-semibold">Entertaiment</div>
-        <div className="text-2xl px-12 py-1 font-semibold">Accessories</div>
-        <div className="text-2xl px-12 py-1 font-semibold">Support</div>
+        <MenuItem show={show} index={0}>
+          Store
+        </MenuItem>
+        <MenuItem show={show} index={1}>
+          Mac
+        </MenuItem>
+        <MenuItem show={show} index={2}>
+          iPad
+        </MenuItem>
+        <MenuItem show={show} index={3}>
+          iPhone
+        </MenuItem>
+        <MenuItem show={show} index={4}>
+          Watch
+        </MenuItem>
+        <MenuItem show={show} index={5}>
+          Vision
+        </MenuItem>
+        <MenuItem show={show} index={6}>
+          AirPods
+        </MenuItem>
+        <MenuItem show={show} index={7}>
+          TV & Home
+        </MenuItem>
+        <MenuItem show={show} index={8}>
+          Entertaiment
+        </MenuItem>
+        <MenuItem show={show} index={9}>
+          Accessories
+        </MenuItem>
+        <MenuItem show={show} index={10}>
+          Support
+        </MenuItem>
       </div>
     </li>
   );
