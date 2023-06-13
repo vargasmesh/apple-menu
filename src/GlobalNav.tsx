@@ -1,5 +1,26 @@
 import React, { useEffect, useState } from "react";
 
+const TransitionFadeIn = ({
+  show,
+  delay,
+  children,
+}: {
+  show: boolean;
+  delay: number;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div
+      className={`duration-1000 ${show ? "opacity-100" : "opacity-0"}`}
+      style={{
+        transitionDelay: show ? `${delay}ms` : "0ms",
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 const MenuItem = ({
   children,
   show,
@@ -18,20 +39,17 @@ const MenuItem = ({
   }, [show]);
 
   return (
-    <div
-      className={`text-2xl px-12 py-1 font-semibold duration-1000 ${
-        show ? "opacity-100" : "opacity-0"
-      }`}
-      style={{
-        transitionDelay: show ? `${index * 50}ms` : "0ms",
-      }}
-      role="button"
-      onClick={() => !showSubMenu && setShowSubMenu(!showSubMenu)}
-    >
-      {typeof children === "function"
-        ? children(show && showSubMenu)
-        : children}
-    </div>
+    <TransitionFadeIn delay={index * 50} show={show}>
+      <div
+        role="button"
+        className="text-2xl px-12 py-1 font-semibold "
+        onClick={() => !showSubMenu && setShowSubMenu(!showSubMenu)}
+      >
+        {typeof children === "function"
+          ? children(show && showSubMenu)
+          : children}
+      </div>
+    </TransitionFadeIn>
   );
 };
 
