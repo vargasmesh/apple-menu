@@ -28,6 +28,20 @@ const MenuItem = ({
 };
 
 const GlobalNavContent = ({ show }: { show: boolean }) => {
+  const items = [
+    { label: "Store" },
+    { label: "Mac" },
+    { label: "iPad" },
+    { label: "iPhone" },
+    { label: "Watch" },
+    { label: "Vision" },
+    { label: "AirPods" },
+    { label: "TV & Home" },
+    { label: "Entertaiment" },
+    { label: "Accessories" },
+    { label: "Support" },
+  ];
+
   return (
     <li
       className={`absolute bg-[#161617] z-10 w-full  transition-all duration-[600ms] ${
@@ -35,39 +49,11 @@ const GlobalNavContent = ({ show }: { show: boolean }) => {
       }`}
     >
       <div className="pt-12 relative">
-        <MenuItem show={show} index={0}>
-          Store
-        </MenuItem>
-        <MenuItem show={show} index={1}>
-          Mac
-        </MenuItem>
-        <MenuItem show={show} index={2}>
-          iPad
-        </MenuItem>
-        <MenuItem show={show} index={3}>
-          iPhone
-        </MenuItem>
-        <MenuItem show={show} index={4}>
-          Watch
-        </MenuItem>
-        <MenuItem show={show} index={5}>
-          Vision
-        </MenuItem>
-        <MenuItem show={show} index={6}>
-          AirPods
-        </MenuItem>
-        <MenuItem show={show} index={7}>
-          TV & Home
-        </MenuItem>
-        <MenuItem show={show} index={8}>
-          Entertaiment
-        </MenuItem>
-        <MenuItem show={show} index={9}>
-          Accessories
-        </MenuItem>
-        <MenuItem show={show} index={10}>
-          Support
-        </MenuItem>
+        {items.map((item, index) => (
+          <MenuItem show={show} index={index} key={index}>
+            {item.label}
+          </MenuItem>
+        ))}
       </div>
     </li>
   );
