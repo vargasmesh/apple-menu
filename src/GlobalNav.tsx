@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { GlobalNavContext, GlobalNavContextType } from "./GlobalNavContext";
 
 const TransitionFadeIn = ({
   show,
@@ -23,30 +24,29 @@ const TransitionFadeIn = ({
 
 const MenuItem = ({
   children,
-  show,
   index,
 }: {
   children: ((showSubMenu: boolean) => React.ReactNode) | React.ReactNode;
-  show: boolean;
   index: number;
 }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
+  const { isNavOpen } = useContext(GlobalNavContext) as GlobalNavContextType;
 
   useEffect(() => {
-    if (!show) {
+    if (!isNavOpen) {
       setShowSubMenu(false);
     }
-  }, [show]);
+  }, [isNavOpen]);
 
   return (
-    <TransitionFadeIn delay={index * 50} show={show}>
+    <TransitionFadeIn delay={index * 50} show={isNavOpen}>
       <div
         role="button"
         className="text-2xl px-12 py-1 font-semibold "
         onClick={() => !showSubMenu && setShowSubMenu(!showSubMenu)}
       >
         {typeof children === "function"
-          ? children(show && showSubMenu)
+          ? children(isNavOpen && showSubMenu)
           : children}
       </div>
     </TransitionFadeIn>
@@ -77,7 +77,9 @@ const SubMenuItem = ({
   );
 };
 
-export const GlobalNav = ({ show }: { show: boolean }) => {
+export const GlobalNav = () => {
+  const { isNavOpen } = useContext(GlobalNavContext) as GlobalNavContextType;
+
   const items = [
     {
       label: "Store",
@@ -105,12 +107,12 @@ export const GlobalNav = ({ show }: { show: boolean }) => {
   return (
     <li
       className={`absolute bg-[#161617] z-10 w-full transition-all duration-[600ms] ${
-        show ? "h-screen visible" : "h-0 invisible"
+        isNavOpen ? "h-screen visible" : "h-0 invisible"
       }`}
     >
       <div className="pt-12 relative">
         {items.map((item, index) => (
-          <MenuItem show={show} index={index} key={index}>
+          <MenuItem index={index} key={index}>
             {(active) => (
               <div>
                 <span>{item.label}</span>
