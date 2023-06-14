@@ -1,20 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import { GlobalNavContext, GlobalNavContextType } from "./GlobalNavContext";
 
-const TransitionFadeIn = ({
+const NavItemTransition = ({
   show,
-  delay,
+  index,
   children,
 }: {
   show: boolean;
-  delay: number;
+  index: number;
   children: React.ReactNode;
 }) => {
+  const delay = 50;
+
   return (
     <div
       className={`duration-1000 ${show ? "opacity-100" : "opacity-0"}`}
       style={{
-        transitionDelay: show ? `${delay}ms` : "0ms",
+        transitionDelay: show ? `${delay * index}ms` : "0ms",
       }}
     >
       {children}
@@ -47,7 +49,7 @@ const MenuItem = ({
   };
 
   return (
-    <TransitionFadeIn delay={index * 50} show={isNavOpen}>
+    <NavItemTransition index={index} show={isNavOpen}>
       <div
         role="button"
         className="text-2xl px-12 py-1 font-semibold "
@@ -57,7 +59,7 @@ const MenuItem = ({
           ? children(isNavOpen && showSubMenu)
           : children}
       </div>
-    </TransitionFadeIn>
+    </NavItemTransition>
   );
 };
 
