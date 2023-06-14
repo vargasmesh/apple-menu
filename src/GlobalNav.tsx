@@ -30,7 +30,9 @@ const MenuItem = ({
   index: number;
 }) => {
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const { isNavOpen } = useContext(GlobalNavContext) as GlobalNavContextType;
+  const { isNavOpen, setIsSubNavOpen } = useContext(
+    GlobalNavContext
+  ) as GlobalNavContextType;
 
   useEffect(() => {
     if (!isNavOpen) {
@@ -38,12 +40,18 @@ const MenuItem = ({
     }
   }, [isNavOpen]);
 
+  const onClick = () => {
+    if (showSubMenu) return;
+    setShowSubMenu(!showSubMenu);
+    setIsSubNavOpen(true);
+  };
+
   return (
     <TransitionFadeIn delay={index * 50} show={isNavOpen}>
       <div
         role="button"
         className="text-2xl px-12 py-1 font-semibold "
-        onClick={() => !showSubMenu && setShowSubMenu(!showSubMenu)}
+        onClick={onClick}
       >
         {typeof children === "function"
           ? children(isNavOpen && showSubMenu)

@@ -22,7 +22,9 @@ function App() {
   };
 
   return (
-    <GlobalNavContext.Provider value={{ isNavOpen, isSubNavOpen }}>
+    <GlobalNavContext.Provider
+      value={{ isNavOpen, isSubNavOpen, setIsNavOpen, setIsSubNavOpen }}
+    >
       <div>
         <nav className="bg-[#161617cc] text-[#ffffffcc] h-12 fixed w-full top-0 left-0 right-0">
           <div className="flex h-full">
