@@ -11,17 +11,23 @@ const NavItemTransition = ({
   delay: number;
   children: React.ReactNode;
 }) => {
+  const style: React.CSSProperties = {};
+  if (isGlobalNavOpen && !isSubNavOpen) {
+    style["transitionDelay"] = `${delay}ms`;
+  }
+
   return (
     <div
       className={`transition-all ${
         isGlobalNavOpen && !isSubNavOpen
           ? "opacity-100 duration-1000 "
           : "opacity-0"
-      } ${isSubNavOpen ? "-translate-x-8 invisible duration-500" : ""}`}
-      style={{
-        transitionDelay:
-          isGlobalNavOpen && !isSubNavOpen ? `${delay}ms` : "0ms",
-      }}
+      } ${
+        isSubNavOpen
+          ? "-translate-x-8 invisible duration-500 delay-200 ease-linear"
+          : ""
+      }`}
+      style={style}
     >
       {children}
     </div>
@@ -59,9 +65,9 @@ export const GlobalNav = ({
               </button>
             </NavItemTransition>
             <div
-              className={`absolute top-0 z-20 transition-all duration-500 ${
+              className={`absolute top-0 z-20 transition-all delay-500 duration-500 ${
                 isSubNavOpen
-                  ? "visible opacity-100"
+                  ? "opacity-100 ease-linear"
                   : "invisible translate-x-8 opacity-0"
               }`}
             >
