@@ -3,8 +3,20 @@ import { IoBagOutline } from "react-icons/io5";
 import { BsSearch } from "react-icons/bs";
 import { HiOutlineMenuAlt4 } from "react-icons/hi";
 import { GlobalNav } from "./GlobalNav";
+import { useState } from "react";
 
 function App() {
+  const [isGlobalNavOpen, setIsGlobalNavOpen] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const onClick = () => {
+    setIsGlobalNavOpen(!isGlobalNavOpen);
+    setIsButtonDisabled(true);
+    setTimeout(() => {
+      setIsButtonDisabled(false);
+    }, 600);
+  };
+
   return (
     <div>
       <nav className="bg-[#161617cc] text-[#ffffffcc] h-12 fixed w-full top-0 left-0 right-0">
@@ -15,7 +27,7 @@ function App() {
                 <FaApple className="h-full" />
               </a>
             </li>
-            <GlobalNav />
+            <GlobalNav isGlobalNavOpen={isGlobalNavOpen} />
             <li>
               <a href="#" className="block w-max px-4 h-12">
                 <BsSearch className="h-full" />
@@ -28,7 +40,12 @@ function App() {
             </li>
           </ul>
           <div className="z-10">
-            <button className="block w-max px-4 h-12" aria-label="Menu">
+            <button
+              className="block w-max px-4 h-12"
+              aria-label="Menu"
+              onClick={onClick}
+              disabled={isButtonDisabled}
+            >
               <HiOutlineMenuAlt4 className="h-full" />
             </button>
           </div>
