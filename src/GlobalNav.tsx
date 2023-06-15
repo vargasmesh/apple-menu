@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavContext } from "./navContext";
 import { HiChevronLeft } from "react-icons/hi";
 
@@ -46,7 +46,10 @@ const NavItemTransition = ({
   );
 };
 
-const SubNavItemTransition = ({ children }: React.PropsWithChildren) => {
+const SubNavItemTransition = ({
+  active,
+  children,
+}: React.PropsWithChildren<{ active: boolean }>) => {
   const {
     state: { action },
   } = useContext(NavContext);
@@ -54,13 +57,13 @@ const SubNavItemTransition = ({ children }: React.PropsWithChildren) => {
   const actionIsOpenSubNav = action === "OPEN_SUB_NAV";
   const actionIsCloseGlobalNav = action === "CLOSE_GLOBAL_NAV";
 
-  const whenOpenSubNav = actionIsOpenSubNav
-    ? "duration-200 opacity-100 ease-linear delay-300"
-    : "invisible delay-100 translate-x-4";
+  const whenOpenSubNav =
+    actionIsOpenSubNav && active
+      ? "duration-200 opacity-100 ease-linear delay-300"
+      : "invisible delay-100 translate-x-4";
 
-  const whenCloseGlobalNav = actionIsCloseGlobalNav
-    ? "opacity-0 duration-500"
-    : "";
+  const whenCloseGlobalNav =
+    actionIsCloseGlobalNav && active ? "opacity-0 duration-500" : "";
 
   return (
     <div
@@ -91,16 +94,43 @@ const BackSubNavItemTransition = ({ children }: React.PropsWithChildren) => {
   );
 };
 
+const NavItem = ({
+  children,
+}: {
+  children: (props: {
+    subNavActive: boolean;
+    setSubNavActive: () => void;
+  }) => React.ReactNode;
+}) => {
+  const { dispatch, state } = useContext(NavContext);
+  const [subNavActive, setSubNavActive] = useState(() => false);
+
+  const onSetSubNavActive = () => {
+    dispatch({ type: "OPEN_SUB_NAV" });
+    setSubNavActive(true);
+  };
+
+  useEffect(() => {
+    if (
+      state.action === "CLOSE_GLOBAL_NAV" ||
+      state.action === "CLOSE_SUB_NAV"
+    ) {
+      setSubNavActive(false);
+    }
+  }, [state]);
+
+  return (
+    <li className="px-12 py-1">
+      {children({ subNavActive, setSubNavActive: onSetSubNavActive })}
+    </li>
+  );
+};
+
 export const GlobalNav = () => {
   const {
-    state: { isGlobalNavOpen, isSubNavOpen },
+    state: { isGlobalNavOpen },
     dispatch,
   } = useContext(NavContext);
-
-  const toggleSubNav = () => {
-    if (isSubNavOpen) dispatch({ type: "CLOSE_SUB_NAV" });
-    else dispatch({ type: "OPEN_SUB_NAV" });
-  };
 
   return (
     <li
@@ -120,20 +150,29 @@ export const GlobalNav = () => {
         <div className="pt-12">
           <ul className="text-2xl font-semibold relative">
             {navItems.map((navItem, index) => (
-              <li className="px-12 py-1">
-                <NavItemTransition delay={50 * (index + 1)}>
-                  <button className="w-full text-left" onClick={toggleSubNav}>
-                    {navItem.text}
-                  </button>
-                </NavItemTransition>
-                <SubNavItemTransition>
-                  <ul>
-                    {navItem.subNavItems?.map((subNavItem) => (
-                      <li className="py-1">{subNavItem}</li>
-                    ))}
-                  </ul>
-                </SubNavItemTransition>
-              </li>
+              <NavItem key={index}>
+                {({ subNavActive, setSubNavActive }) => (
+                  <>
+                    <NavItemTransition delay={50 * (index + 1)}>
+                      <button
+                        className="w-full text-left"
+                        onClick={setSubNavActive}
+                      >
+                        {navItem.text}
+                      </button>
+                    </NavItemTransition>
+                    <SubNavItemTransition active={subNavActive}>
+                      <ul>
+                        {navItem.subNavItems?.map((subNavItem, index) => (
+                          <li className="py-1" key={index}>
+                            {subNavItem}
+                          </li>
+                        ))}
+                      </ul>
+                    </SubNavItemTransition>
+                  </>
+                )}
+              </NavItem>
             ))}
           </ul>
         </div>
