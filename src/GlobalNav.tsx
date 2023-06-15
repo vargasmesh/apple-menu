@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { NavContext } from "./navContext";
 
 const NavItemTransition = ({
   isGlobalNavOpen,
@@ -34,11 +35,10 @@ const NavItemTransition = ({
   );
 };
 
-export const GlobalNav = ({
-  isGlobalNavOpen,
-}: {
-  isGlobalNavOpen: boolean;
-}) => {
+export const GlobalNav = () => {
+  const {
+    state: { isGlobalNavOpen },
+  } = useContext(NavContext);
   const [isSubNavOpen, setIsSubNavOpen] = useState(false);
 
   const toggleSubNav = () => {
