@@ -1,17 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { NavContext } from "./navContext";
 
 const NavItemTransition = ({
-  isGlobalNavOpen,
-  isSubNavOpen,
   delay,
   children,
 }: {
-  isGlobalNavOpen: boolean;
-  isSubNavOpen: boolean;
   delay: number;
   children: React.ReactNode;
 }) => {
+  const {
+    state: { isGlobalNavOpen, isSubNavOpen },
+  } = useContext(NavContext);
+
   const style: React.CSSProperties = {};
   if (isGlobalNavOpen && !isSubNavOpen) {
     style["transitionDelay"] = `${delay}ms`;
@@ -37,12 +37,13 @@ const NavItemTransition = ({
 
 export const GlobalNav = () => {
   const {
-    state: { isGlobalNavOpen },
+    state: { isGlobalNavOpen, isSubNavOpen },
+    dispatch,
   } = useContext(NavContext);
-  const [isSubNavOpen, setIsSubNavOpen] = useState(false);
 
   const toggleSubNav = () => {
-    setIsSubNavOpen(!isSubNavOpen);
+    if (isSubNavOpen) dispatch({ type: "CLOSE_SUB_NAV" });
+    else dispatch({ type: "OPEN_SUB_NAV" });
   };
 
   return (
@@ -51,15 +52,11 @@ export const GlobalNav = () => {
         isGlobalNavOpen ? "h-screen visible" : "h-0 invisible"
       }`}
     >
-      <button onClick={() => setIsSubNavOpen(false)}>Back</button>
+      <button onClick={() => dispatch({ type: "CLOSE_SUB_NAV" })}>Back</button>
       <div className="pt-12">
         <ul className="text-2xl font-semibold relative">
           <li className="px-12">
-            <NavItemTransition
-              isGlobalNavOpen={isGlobalNavOpen}
-              isSubNavOpen={isSubNavOpen}
-              delay={50}
-            >
+            <NavItemTransition delay={50}>
               <button className="w-full text-left" onClick={toggleSubNav}>
                 Store
               </button>
