@@ -43,6 +43,24 @@ const NavItemTransition = ({
   );
 };
 
+const SubNavItemTransition = ({ children }: React.PropsWithChildren) => {
+  const {
+    state: { isSubNavOpen },
+  } = useContext(NavContext);
+
+  return (
+    <div
+      className={`absolute top-0 z-20 transition-all duration-200 ${
+        isSubNavOpen
+          ? "opacity-100 ease-linear delay-300"
+          : "invisible translate-x-4 opacity-0 delay-100"
+      }`}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const GlobalNav = () => {
   const {
     state: { isGlobalNavOpen, isSubNavOpen },
@@ -69,19 +87,13 @@ export const GlobalNav = () => {
                 Store
               </button>
             </NavItemTransition>
-            <div
-              className={`absolute top-0 z-20 transition-all duration-200 ${
-                isSubNavOpen
-                  ? "opacity-100 ease-linear delay-300"
-                  : "invisible translate-x-4 opacity-0 delay-100"
-              }`}
-            >
+            <SubNavItemTransition>
               <ul>
                 <li className="py-1">Shop the Latest</li>
                 <li className="py-1">Mac</li>
                 <li className="py-1">iPad</li>
               </ul>
-            </div>
+            </SubNavItemTransition>
           </li>
         </ul>
       </div>
