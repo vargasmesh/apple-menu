@@ -9,25 +9,33 @@ const NavItemTransition = ({
   children: React.ReactNode;
 }) => {
   const {
-    state: { isGlobalNavOpen, isSubNavOpen },
+    state: { action },
   } = useContext(NavContext);
 
+  const actionIsOpenGlobalNav = action === "OPEN_GLOBAL_NAV";
+  const actionIsOpenSubNav = action === "OPEN_SUB_NAV";
+  const actionIsCloseSubNav = action === "CLOSE_SUB_NAV";
+
   const style: React.CSSProperties = {};
-  if (isGlobalNavOpen && !isSubNavOpen) {
+  if (actionIsOpenGlobalNav) {
     style["transitionDelay"] = `${delay}ms`;
   }
 
+  const classWhenOpenGlobalNav = actionIsOpenGlobalNav
+    ? "opacity-100 duration-1000 "
+    : "opacity-0";
+
+  const classWhenOpenSubNav = actionIsOpenSubNav
+    ? "-translate-x-4 invisible duration-200 delay-100 ease-linear"
+    : "";
+
+  const whenCloseSubNav = actionIsCloseSubNav
+    ? "visible opacity-100 duration-200 delay-200 ease-linear"
+    : "";
+
   return (
     <div
-      className={`transition-all ${
-        isGlobalNavOpen && !isSubNavOpen
-          ? "opacity-100 duration-1000 "
-          : "opacity-0"
-      } ${
-        isSubNavOpen
-          ? "-translate-x-8 invisible duration-500 delay-200 ease-linear"
-          : ""
-      }`}
+      className={`transition-all ${classWhenOpenGlobalNav} ${classWhenOpenSubNav} ${whenCloseSubNav}`}
       style={style}
     >
       {children}
@@ -55,23 +63,23 @@ export const GlobalNav = () => {
       <button onClick={() => dispatch({ type: "CLOSE_SUB_NAV" })}>Back</button>
       <div className="pt-12">
         <ul className="text-2xl font-semibold relative">
-          <li className="px-12">
+          <li className="px-12 py-1">
             <NavItemTransition delay={50}>
               <button className="w-full text-left" onClick={toggleSubNav}>
                 Store
               </button>
             </NavItemTransition>
             <div
-              className={`absolute top-0 z-20 transition-all delay-500 duration-500 ${
+              className={`absolute top-0 z-20 transition-all duration-200 ${
                 isSubNavOpen
-                  ? "opacity-100 ease-linear"
-                  : "invisible translate-x-8 opacity-0"
+                  ? "opacity-100 ease-linear delay-300"
+                  : "invisible translate-x-4 opacity-0 delay-100"
               }`}
             >
               <ul>
-                <li>Shop the Latest</li>
-                <li>Mac</li>
-                <li>iPad</li>
+                <li className="py-1">Shop the Latest</li>
+                <li className="py-1">Mac</li>
+                <li className="py-1">iPad</li>
               </ul>
             </div>
           </li>
