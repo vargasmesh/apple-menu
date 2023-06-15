@@ -1,5 +1,8 @@
 import { useContext } from "react";
 import { NavContext } from "./navContext";
+import { HiChevronLeft } from "react-icons/hi";
+
+const fadeOutToLeft = "-translate-x-4 duration-200 delay-100 ease-linear";
 
 const NavItemTransition = ({
   delay,
@@ -26,7 +29,7 @@ const NavItemTransition = ({
     : "opacity-0";
 
   const classWhenOpenSubNav = actionIsOpenSubNav
-    ? "-translate-x-4 invisible duration-200 delay-100 ease-linear"
+    ? `invisible ${fadeOutToLeft}`
     : "";
 
   const whenCloseSubNav = actionIsCloseSubNav
@@ -53,16 +56,36 @@ const SubNavItemTransition = ({ children }: React.PropsWithChildren) => {
 
   const whenOpenSubNav = actionIsOpenSubNav
     ? "duration-200 opacity-100 ease-linear delay-300"
-    : "invisible delay-100";
+    : "invisible delay-100 translate-x-4";
 
   const whenCloseGlobalNav = actionIsCloseGlobalNav
-    ? "opacity-0 invisible duration-500"
+    ? "opacity-0 duration-500"
     : "";
 
   return (
     <div
-      className={`opacity-0 absolute top-0 z-20 translate-x-4 transition-all ${whenOpenSubNav} ${whenCloseGlobalNav}`}
+      className={`opacity-0 absolute top-0 z-20 transition-all ${whenOpenSubNav} ${whenCloseGlobalNav}`}
     >
+      {children}
+    </div>
+  );
+};
+
+const BackSubNavItemTransition = ({ children }: React.PropsWithChildren) => {
+  const {
+    state: { action },
+  } = useContext(NavContext);
+
+  const actionIsOpenSubNav = action === "OPEN_SUB_NAV";
+  const actionIsCloseSubNav = action === "CLOSE_SUB_NAV";
+
+  const whenOpenSubNav = actionIsOpenSubNav
+    ? "visible duration-200 opacity-100 ease-linear delay-300"
+    : "invisible translate-x-4 opacity-0";
+  const whenCloseSubNav = actionIsCloseSubNav ? "duration-500 delay-100" : "";
+
+  return (
+    <div className={`transition-all ${whenOpenSubNav} ${whenCloseSubNav}`}>
       {children}
     </div>
   );
@@ -85,7 +108,14 @@ export const GlobalNav = () => {
         isGlobalNavOpen ? "h-screen visible" : "h-0 invisible"
       }`}
     >
-      <button onClick={() => dispatch({ type: "CLOSE_SUB_NAV" })}>Back</button>
+      <BackSubNavItemTransition>
+        <button
+          onClick={() => dispatch({ type: "CLOSE_SUB_NAV" })}
+          className="text-xl absolute top-0 left-0 py-3 px-4"
+        >
+          <HiChevronLeft />
+        </button>
+      </BackSubNavItemTransition>
       <div className="pt-12">
         <ul className="text-2xl font-semibold relative">
           <li className="px-12 py-1">
