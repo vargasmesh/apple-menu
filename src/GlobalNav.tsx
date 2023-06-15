@@ -81,7 +81,7 @@ const BackSubNavItemTransition = ({ children }: React.PropsWithChildren) => {
 
   const whenOpenSubNav = actionIsOpenSubNav
     ? "visible duration-200 opacity-100 ease-linear delay-300"
-    : "invisible translate-x-4 opacity-0";
+    : "invisible translate-x-2 opacity-0";
   const whenCloseSubNav = actionIsCloseSubNav ? "duration-500 delay-100" : "";
 
   return (
@@ -108,32 +108,83 @@ export const GlobalNav = () => {
         isGlobalNavOpen ? "h-screen visible" : "h-0 invisible"
       }`}
     >
-      <BackSubNavItemTransition>
-        <button
-          onClick={() => dispatch({ type: "CLOSE_SUB_NAV" })}
-          className="text-xl absolute top-0 left-0 py-3 px-4"
-        >
-          <HiChevronLeft />
-        </button>
-      </BackSubNavItemTransition>
-      <div className="pt-12">
-        <ul className="text-2xl font-semibold relative">
-          <li className="px-12 py-1">
-            <NavItemTransition delay={50}>
-              <button className="w-full text-left" onClick={toggleSubNav}>
-                Store
-              </button>
-            </NavItemTransition>
-            <SubNavItemTransition>
-              <ul>
-                <li className="py-1">Shop the Latest</li>
-                <li className="py-1">Mac</li>
-                <li className="py-1">iPad</li>
-              </ul>
-            </SubNavItemTransition>
-          </li>
-        </ul>
-      </div>
+      <>
+        <BackSubNavItemTransition>
+          <button
+            onClick={() => dispatch({ type: "CLOSE_SUB_NAV" })}
+            className="text-xl absolute top-0 left-0 py-3 px-4"
+          >
+            <HiChevronLeft />
+          </button>
+        </BackSubNavItemTransition>
+        <div className="pt-12">
+          <ul className="text-2xl font-semibold relative">
+            {navItems.map((navItem, index) => (
+              <li className="px-12 py-1">
+                <NavItemTransition delay={50 * (index + 1)}>
+                  <button className="w-full text-left" onClick={toggleSubNav}>
+                    {navItem.text}
+                  </button>
+                </NavItemTransition>
+                <SubNavItemTransition>
+                  <ul>
+                    {navItem.subNavItems?.map((subNavItem) => (
+                      <li className="py-1">{subNavItem}</li>
+                    ))}
+                  </ul>
+                </SubNavItemTransition>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </>
     </li>
   );
 };
+
+const navItems = [
+  {
+    text: "Store",
+    subNavItems: [
+      "Shop the Latest",
+      "Mac",
+      "iPad",
+      "iPhone",
+      "Apple Watch",
+      "Accessories",
+    ],
+  },
+  {
+    text: "Mac",
+    subNavItems: [
+      "Explore All Mac",
+      "MacBook Air",
+      "MacBook Pro",
+      "iMac",
+      "Mac mini",
+      "Mac Studio",
+      "Mac Pro",
+      "Displays",
+    ],
+  },
+  {
+    text: "iPad",
+    subNavItems: [
+      "Explore All iPad",
+      "iPad Pro",
+      "iPad Air",
+      "iPad",
+      "iPad mini",
+      "Apple Pencil",
+      "Keyboards",
+    ],
+  },
+  { text: "iPhone" },
+  { text: "Watch" },
+  { text: "Vision" },
+  { text: "AirPods" },
+  { text: "TV & Home" },
+  { text: "Entertaiment" },
+  { text: "Accessories" },
+  { text: "Support" },
+];
