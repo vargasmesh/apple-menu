@@ -23,7 +23,12 @@ const navReducer = (state: NavState, action: NavAction) => {
     case "OPEN_GLOBAL_NAV":
       return { ...state, action: action.type, isGlobalNavOpen: true };
     case "CLOSE_GLOBAL_NAV":
-      return { ...state, action: action.type, isGlobalNavOpen: false };
+      return {
+        ...state,
+        action: action.type,
+        isGlobalNavOpen: false,
+        isSubNavOpen: false,
+      };
     case "OPEN_SUB_NAV":
       return { ...state, action: action.type, isSubNavOpen: true };
     case "CLOSE_SUB_NAV":

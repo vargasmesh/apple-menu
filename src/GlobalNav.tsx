@@ -45,16 +45,23 @@ const NavItemTransition = ({
 
 const SubNavItemTransition = ({ children }: React.PropsWithChildren) => {
   const {
-    state: { isSubNavOpen },
+    state: { action },
   } = useContext(NavContext);
+
+  const actionIsOpenSubNav = action === "OPEN_SUB_NAV";
+  const actionIsCloseGlobalNav = action === "CLOSE_GLOBAL_NAV";
+
+  const whenOpenSubNav = actionIsOpenSubNav
+    ? "duration-200 opacity-100 ease-linear delay-300"
+    : "invisible delay-100";
+
+  const whenCloseGlobalNav = actionIsCloseGlobalNav
+    ? "opacity-0 invisible duration-500"
+    : "";
 
   return (
     <div
-      className={`absolute top-0 z-20 transition-all duration-200 ${
-        isSubNavOpen
-          ? "opacity-100 ease-linear delay-300"
-          : "invisible translate-x-4 opacity-0 delay-100"
-      }`}
+      className={`opacity-0 absolute top-0 z-20 translate-x-4 transition-all ${whenOpenSubNav} ${whenCloseGlobalNav}`}
     >
       {children}
     </div>
